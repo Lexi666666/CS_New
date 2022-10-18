@@ -1,0 +1,58 @@
+---
+title: "worksheet1"
+author: "lexi"
+date: "10/18/2022"
+output:
+  html_document:
+    df_print: paged
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## R Markdown
+
+This is an R Markdown document. Markdown is a simple formatting syntax for authoring HTML, PDF, and MS Word documents. For more details on using R Markdown see <http://rmarkdown.rstudio.com>.
+
+When you click the **Knit** button a document will be generated that includes both content as well as the output of any embedded R code chunks within the document. You can embed an R code chunk like this:
+
+```{r cars}
+summary(cars)
+```
+
+## Question 1
+
+Count the types of things I’m doing online (column “transType” in the wbdata). What is my most frequent type of interaction with the web?
+
+
+```{r pressure, echo=FALSE}
+library(jsonlite)
+library(dplyr)
+wbdata <- jsonlite::fromJSON(gzcon(url("https://github.com/cjbarrie/CS-ED/blob/main/data/web_historian_data.json?raw=true")))
+wbdata %>%
+  group_by(transType) %>%
+  count() %>%
+  arrange(desc(n))
+```
+
+## Question 2
+
+Change the colour of the bars in the bar graph.
+
+```{r}
+library(jsonlite)
+library(dplyr)
+wbdata <- jsonlite::fromJSON(gzcon(url("https://github.com/cjbarrie/CS-ED/blob/main/data/web_historian_data.json?raw=true")))
+
+wbdata_mp <- wbdata %>% 
+  group_by(domain) %>%
+  count() %>%
+  filter(n >5)
+
+wbdata_mp %>%
+  ggplot() +
+  geom_bar(aes(domain, n), stat = "identity", fill = "blue") +
+  coord_flip()
+```
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
